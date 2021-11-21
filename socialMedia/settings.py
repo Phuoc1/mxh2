@@ -48,7 +48,7 @@ INSTALLED_APPS = [
     'profanitycustom',
     'crispy_forms',
 
-    
+    'livereload',
 ]
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
