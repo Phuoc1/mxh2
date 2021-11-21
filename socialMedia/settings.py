@@ -48,7 +48,7 @@ INSTALLED_APPS = [
     'profanitycustom',
     'crispy_forms',
 
-    'livereload',
+    
 ]
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
@@ -62,7 +62,6 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'accounts.middleware.AnonymousMiddleWare',
 
-    'livereload.middleware.LiveReloadScript',
 ]
 
 ROOT_URLCONF = 'socialMedia.urls'
