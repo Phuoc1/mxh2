@@ -3,5 +3,7 @@ gunicorn
 django-heroku
 django-active-link
 django-crispy-forms
-django-livereload-server
+django-guard-livereload
+django-rack-livereload
+
 pillow
