@@ -1,0 +1,98 @@
+{% extends "layout.html"%}
+
+{% block body %} 
+<div class="container" style="height:660px; overflow-y: scroll; ">
+
+    <div style="margin-bottom: 50px;margin-top: 20px;border-radius: 20px;border: 2px solid #e44d3a;padding: 40px; ">
+    
+    <a href="/profile/{{post.owner.id}}">        
+        <strong>
+            <!--ĐẦU PHẦN TỰ THÊM-->
+                
+                {% if checker.is_self == False %}
+                <img src="{% if post.owner.userprofile.avatar %} {{post.owner.userprofile.avatar.url}} {% else %} /images/avatars/profile.jpeg {% endif %}"
+                    class="img-responsive" alt="" style="width: 40px; height:40px; left: 1250px;border-radius: 50%;">
+                {% else %}
+                <img src="{% if post.owner.userprofile.avatar %} {{post.owner.userprofile.avatar.url}} {% else %} /images/avatars/profile.jpeg {% endif %}"
+                    class="img-responsive" alt="" style="width: 40px; height:40px; left: 1250px;border-radius: 50%;">
+                {% endif %}
+                
+            <!--//CUỐI PHẦN TỰ THÊM-->
+            <h2 style="display: inline-block;font-size: 15px;">{{post.owner.userprofile.last_name}} {{post.owner.userprofile.first_name}} ------ {{post.created_at}}</h2> 
+        
+        </strong>
+    </a>
+    <div style="width: 300px;height: 2px;background-color: #e44d3a;"></div>
+    
+    
+    {% if post.image == null or  post.image == "" %}
+        <div class="row" >
+            <div class="col-12" style="height:400px; overflow-y: scroll;">
+                <p style="margin-top: 20px; word-break: break-all;">{{post.content}}</p>
+            </div>
+        </div>    
+    {% else %}
+        <div class="row">
+            <div class="col-6" style="height:400px; overflow-y: scroll;">
+                <p style="margin-top: 20px; word-break: break-all;">{{post.content}}</p>
+            </div>
+            <div class="col-6">
+            {% if post.image != null and  post.image != ""%}
+                <img src="/images/{{post.image }}" width="400px"/>
+            {% endif %}
+            </div>
+        </div>
+    {% endif %}
+          
+
+     </div>
+    
+    <hr>
+        <div style="color: #e44d3a;display: inline-block;margin-right: 20px; color:rgb(25, 0, 255)"><strong> likes:   </strong></div>  {{ post.liked.all.count }} likes 
+        <a href="{% url "post-likes" post.id%}" style="color:rgb(25, 0, 255)" class="mx-3"><i class="fa fa-eye" aria-hidden="true"></i></a>
+        <br>
+        <hr>
+        <h4>Comments</h4>
+        <div style="margin-bottom: 50px;">
+        <div class="comments"></div>
+        {% if not post.comments.all %} 
+        <br>
+        0 Comment --- No Comments Yet ....  <a href="{% url 'add_comment' post.pk %}" class="add-comment" style="color:rgb(25, 0, 255)"><strong>add comment  <i class="fas fa-keyboard"></i></strong></a>
+        {% else %} 
+        <br>
+        <a href="{% url 'add_comment' post.pk %}" class="add-comment" style="color:rgb(25, 0, 255)"><strong>add comment  <i class="fas fa-keyboard"></i></strong></a>
+            <br>
+            <br>
+            <hr>
+            <div style="height:500px; overflow-y: scroll;"> 
+                {% for comment in post.comments.all %}
+                    <a href="/profile/{{comment.owner.id}}">
+                        <strong>
+                            <!--ĐẦU PHẦN TỰ THÊM-->
+                                
+                                    {% if checker.is_self == False %}
+                                    <img src="{% if post.owner.userprofile.avatar %} {{comment.owner.userprofile.avatar.url}} {% else %} /images/avatars/profile.jpeg {% endif %}"
+                                        class="img-responsive" alt="" style="width: 35px; height:35px; border-radius: 50%;">
+                                    {% else %}
+                                    <img src="{% if post.owner.userprofile.avatar %} {{comment.owner.userprofile.avatar.url}} {% else %} /images/avatars/profile.jpeg {% endif %}"
+                                        class="img-responsive" alt="" style="width: 35px; height:35px; border-radius: 50%;">
+                                    {% endif %}
+                                
+                            <!--//CUỐI PHẦN TỰ THÊM--> 
+                            <h2 style="display: inline-block;font-size: 15px;">{{comment.owner.userprofile.last_name}} {{comment.owner.userprofile.first_name}} ------ {{comment.created_at}} </h2>
+                        </strong>
+                    </a>
+                <br>
+                    <span style="word-break: break-all;">{{comment.content}}</span>
+                <br>
+                {% if request.user == comment.owner %}
+                <a href="{% url 'del_comment' comment.id %}" class="add-comment">delete</a>
+                {% endif %}
+                <hr>
+                {% endfor %}
+            </div>
+
+        {% endif %} 
+    </div>
+</div>
+{% endblock %} 

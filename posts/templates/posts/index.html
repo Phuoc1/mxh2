@@ -1,0 +1,180 @@
+{% extends "layout.html"%}
+{% block style %}
+<style>
+    label {
+        display: none
+    }
+
+    ul {
+        list-style: none;
+    }
+
+    textarea {
+        float: left;
+        width: 100%;
+        height: 60px;
+        border: 1px solid #e44d3a;
+        border-radius: 10px;
+        margin-bottom: 10px;
+    }
+</style>
+
+{% endblock %}
+
+{% block body %}
+
+<div class="container">
+    <div class="row pt-1">
+
+        <div class="col-sm-4 py-2 ">
+
+            <div class="mycard">
+                <form action="" method="GET">
+                    <input type="text" name="q" id="" class="post_input " placeholder="  Search for user by name">
+                    <input type="submit" class="btn mt-2" value="Search"></a>
+                </form>
+            </div>
+
+            <div class="mycard">
+                <i class="fa fa-users fa-4x" aria-hidden="true"></i>
+                <h2>Group</h2>
+
+                {% for group in groups %}
+                <hr>
+                <h5>{{group.name}}</h5>
+                <div class="d-flex pl-3">
+                    <p><button class="mx-2" style="background-color:rgb(25, 0, 255)" onclick="location.href='{% url "show" group.id %}';">visit group</button>
+                    </p>
+                    <p><button class="mx-2" style="background-color:grey" onclick="location.href='{% url "leave" group.id %}';">leave group</button></p>
+                </div>
+
+                <hr>
+                {% endfor %}
+
+
+            </div>
+
+
+        </div>
+
+
+        <!-- ----------------------------------------------------------- end side ----------------------------------- -->
+        <div class="col-sm-8 mycard" style="height:660px; overflow-y: scroll;">
+            <div class="post-topbar" style="height:160px; margin-top:-40px">
+                <form action='{% url "index" %}' method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="row" >
+                        <div class="col-10">
+                            {{form.as_p}}
+                            {% if form.content.error %}
+                            <div id="form-error">
+                                {{form.content.errors.0}}
+                            </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="col-2" >
+                            <button class="post btn" type="submit" style="background-color:rgb(25, 0, 255)" >Post</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            
+
+            {% for post in posts %}
+            <hr>
+
+            <div class="card text-center" >
+                <div class="card-header">
+                    <div class="row" style="width: 1000px">
+                        
+                        <p >
+                            <a href="/profile/{{post.owner.id}}" style="color:blue; margin-left: 5px; ">
+                                <!--ĐẦU PHẦN TỰ THÊM-->
+                                <div>
+                                    {% if checker.is_self == False %}
+                                    <img src="{% if post.owner.userprofile.avatar %} {{post.owner.userprofile.avatar.url}} {% else %} /images/avatars/profile.jpeg {% endif %}"
+                                        class="img-responsive" alt="" style="width: 50px; height:50px;left: 20px;border-radius: 50%;">
+                                    {% else %}
+                                    <img src="{% if post.owner.userprofile.avatar %} {{post.owner.userprofile.avatar.url}} {% else %} /images/avatars/profile.jpeg {% endif %}"
+                                        class="img-responsive" alt="" style="width: 50px; height:50px; left: 20px;border-radius: 50%;">
+                                    {% endif %}
+                                </div> 
+                                <!--//CUỐI PHẦN TỰ THÊM-->
+                            </a>
+                            
+                            <a href="/profile/{{post.owner.id}}" style="color:rgb(25, 0, 255); font-size: 20px; margin-left: 5px;padding-top: 2px;">
+                                <span>{{post.owner.userprofile.last_name}} {{post.owner.userprofile.first_name}}</span>
+                            </a>
+                            
+
+                            {% if post.group != null %}
+                            <span style="color:#e44d3a;"> >> from group:</span> {{post.group }}
+                            {% endif %}
+                        </p>
+
+                        <p class="col-5" style="text-align:center; padding-top: 15px; margin-left:220px; ">
+                            
+                            {% if post.owner == request.user %}
+                            <a href="{% url 'edit' post.id%}" style="color:rgb(25, 0, 255)" class="mx-3"><i class="fa fa-pen"
+                                    aria-hidden="true"></i></a>
+                            <a href="{% url 'delete' post.id%}" style="color:rgb(25, 0, 255)" class="mx-3"><i class="fa fa-trash"
+                                    aria-hidden="true"></i></a>
+                            {% endif %}
+                        </p>
+                        <p style="text-align:left;color:gray;font-size:12px;margin-left:70px; margin-top:-20px">{{post.created_at}} <i class="fas fa-globe-americas"></i></p>
+                    </div>
+                </div>
+                
+                <h5 class="card-text" style="text-align: left; margin-left:20px; margin-top:10px; font-size:15px; height:80px; overflow-y: scroll;">
+                    <strong>{{post.content}}</strong>
+                </h5>
+                <a href="{% url 'view' post.id%}" style="color:rgb(25, 0, 255); font-size:14px;" class="mx-3">See More <i class="fa fa-eye" aria-hidden="true"></i></a>
+                <a href="{% url 'view' post.id %}">
+                    <div class="card-body">
+                        {% if post.image != null and post.image != ""%}
+                        <img src="/images/{{post.image }}" width="400px" />
+                        {% endif %}
+                    </div>
+                </a>
+                <div class="card-footer text-muted d-flex">
+                    <div style="text-align:left;width:80%">
+                        <form action="{% url 'like-post' %}" method="POST" style="display: inline-block;">
+                            {% csrf_token %}
+                            <input type="hidden" name="post_id" value="{{post.id}}">
+
+                            {% if request.user not in post.liked.all %}
+                            <button type="submit"
+                                style="background-color:rgb(25, 0, 255);color:whitesmoke;width: 58px;height: 30px;line-height: 10px;font-size: medium;border-radius: 30px;">Like
+                            </button>
+                            {% else %}
+                            <button type="submit"
+                                style="background-color:rgb(25, 0, 255);color:whitesmoke;width: 70px;height: 30px;line-height: 10px;font-size: medium;border-radius: 30px;">Unlike
+                            </button>
+                            {% endif %}
+
+                        </form>
+                        <a href="{% url "post-likes" post.id%}" style="color:rgb(25, 0, 255)" class="mx-3">
+						    <strong>{{ post.liked.all.count }} likes</strong>
+					    </a>
+                        <a href="{% url 'view' post.id%}" style="color:rgb(25, 0, 255);"><i class="fa fa-comment mx-4 fa-lg " aria-hidden="true"></i></a>
+                    </div>
+                </div>
+            </div>
+
+            <hr>
+
+            {% endfor %}
+
+
+        </div>
+
+    </div>
+
+
+
+
+</div>
+
+{%endblock%}

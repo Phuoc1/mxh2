@@ -1,0 +1,93 @@
+{% extends "profileLayout.html" %}
+{% block content %}
+<style type="text/css">
+	.profile-image {
+		max-height: 100px;
+		max-width: 100px;
+	}
+
+	.profile-image {
+		border-radius: 12px;
+	}
+
+	.card {
+		border-radius: 12px;
+	}
+
+	.friends-text {
+		color: #000;
+		font-weight: 500;
+	}
+
+	.friends-text-container {
+		border: 1px solid #cccccc;
+		border-radius: 12px;
+	}
+
+	.friends-btn:hover {
+		background-color: #bfbfbf;
+		border-color: #bfbfbf;
+	}
+
+	.dropdown-toggle::after {
+		content: none;
+	}
+
+	.profile-link {
+		color: #000;
+	}
+
+	.checkmark-icon {
+		color: green;
+	}
+
+	.cancel-icon {
+		color: red;
+	}
+</style>
+
+<div class="container" style="height:660px; overflow-y: scroll;">
+	<div>
+		<h2>Friends of {{request.user.userprofile.last_name}} {{request.user.userprofile.first_name}}:</h2>
+		<br>
+		<hr>
+		{% if friends|length > 0 %}
+		
+
+
+		{% for friend in friends %}
+    		<div style="margin-top: 10px;text-align: center;">
+        		<span style="text-align: center;border: 2px solid #e44d3a;color: #e44d3a;width: 700px;border-radius: 40px;display: inline-block;
+						position: relative; height: 70px;line-height: 50px; font-size:16px;">
+					
+					<a href="/profile/{{friend.userprofile.user_id}}">
+            		<!--ĐẦU PHẦN TỰ THÊM-->
+                    <div style="display: flex;justify-content: center;">
+                        {% if checker.is_self == False %}
+                        <img src="{% if friend.userprofile.avatar %} {{friend.userprofile.avatar.url}} {% else %} /images/avatars/profile.jpeg {% endif %}"
+                            class="img-responsive" alt="" style="width: 65px; height: 65px; position: absolute;left: 10px; border-radius: 50%;">
+                        {% else %}
+                        <img src="{% if friend.userprofile.avatar %} {{friend.userprofile.avatar.url}} {% else %} /images/avatars/profile.jpeg {% endif %}"
+                            class="img-responsive" alt="" style="width: 65px; height: 65px;position: absolute;left: 10px; border-radius: 50%;">
+                        {% endif %}
+                    </div> 
+           		 	<!--//CUỐI PHẦN TỰ THÊM-->
+					</a>
+
+            		<div style="text-align: center;display: inline-block;position: relative; margin-left:40px; margin-right:10px; ">{{friend.userprofile.last_name}} {{friend.userprofile.first_name}}</div>
+            		<span>
+						<a href="/profile/{{friend.userprofile.user_id}}"><i class="fas fa-user"></i> View Profile </a>---- | ----
+						<a href="/messages/?id={{friend.id}}" ><i class="fab fa-facebook-messenger"></i> Send a Message</a>
+					</span>
+				</span>
+    		</div>
+		{% endfor %}
+
+
+		{% else %}
+		<h3>You have no friends, add friends first. </h3>
+		{% endif %}
+
+	</div>
+
+	{% endblock %}

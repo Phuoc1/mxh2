@@ -1,0 +1,123 @@
+{% extends "profileLayout.html" %}
+
+{% block content %}
+<div class="profile-content" style="height:660px; overflow-y: scroll;">
+
+	<h5>Feed Posts</h5>
+	{% if checker.is_self %}
+	<div class="post-topbar">
+		<form action='{% url "index" %}' method="post" enctype="multipart/form-data">
+			{% csrf_token %}
+			<div class="row">
+				<div class="col-10">
+					{{ form.as_p}}
+					<input class="post_input " name="content" placeholder="  What's in your mind?" />
+					<input class="mt-2 " type="file" name="image" />
+
+
+				</div>
+				<div class="col-2">
+					<button class="post btn" type="submit">Post</button>
+				</div>
+			</div>
+		</form>
+	</div>
+	{% endif %}
+
+	{% if posts %}
+	{% for post in posts %}
+	<hr>
+	<div class="card text-center">
+		<div class="card-header">
+			
+			<div class="row" style="width: 1000px">
+                        
+                        <p >
+                            <a href="/profile/{{post.owner.id}}" style="color:blue; margin-left: 5px; ">
+                                <!--ĐẦU PHẦN TỰ THÊM-->
+                                <div>
+                                    {% if checker.is_self == False %}
+                                    <img src="{% if post.owner.userprofile.avatar %} {{post.owner.userprofile.avatar.url}} {% else %} /images/avatars/profile.jpeg {% endif %}"
+                                        class="img-responsive" alt="" style="width: 50px; height:50px; left: 20px;border-radius: 50%;">
+                                    {% else %}
+                                    <img src="{% if post.owner.userprofile.avatar %} {{post.owner.userprofile.avatar.url}} {% else %} /images/avatars/profile.jpeg {% endif %}"
+                                        class="img-responsive" alt="" style="width: 50px; height:50px;left: 20px;border-radius: 50%;">
+                                    {% endif %}
+                                </div> 
+                                <!--//CUỐI PHẦN TỰ THÊM-->
+                            </a>
+                            
+                            <a href="/profile/{{post.owner.id}}" style="color:rgb(25, 0, 255); font-size: 20px; margin-left: 5px;padding-top: 2px;">
+                                <span>{{post.owner.userprofile.last_name}} {{post.owner.userprofile.first_name}}</span>
+                            </a>
+                            
+
+                            {% if post.group != null %}
+                            <span style="color:#e44d3a;"> >> from group:</span> {{post.group }}
+                            {% endif %}
+                        </p>
+                        <p style="text-align:left;color:gray;font-size:12px;margin-left:-100px; margin-top:30px">{{post.created_at}} <i class="fas fa-globe-americas"></i></p>
+                    </div>
+		</div>
+
+
+        <h5 class="card-text" style="text-align: left; margin-left:20px; margin-top:10px; font-size:15px; height:70px; overflow-y: scroll;">{{post.content}}</h5>
+                <a href="{% url 'view' post.id%}" style="color:rgb(25, 0, 255)" class="mx-3">See More <i class="fa fa-eye" aria-hidden="true"></i></a>
+				<p class="col-5" style="text-align:center; padding-top: 15px; margin-left:220px; ">
+					{% if post.owner == request.user %}
+					<a href="{% url 'edit' post.id%}" style="color:rgb(25, 0, 255)" class="mx-3"><i class="fa fa-pen"
+							aria-hidden="true"></i></a>
+					<a href="{% url 'delete' post.id%}" style="color:rgb(25, 0, 255)" class="mx-3"><i class="fa fa-trash"
+							aria-hidden="true"></i></a>
+					{% endif %}
+				</p>
+		<a href="{% url 'view' post.id %}">
+			<div class="card-body">
+				{% if post.image != null and post.image != ""%}
+				<img src="/images/{{post.image }}" width="400px" />
+				{% endif %}
+			</div>
+		</a>
+		
+		
+		<div class="card-footer text-muted d-flex">
+			<div style="text-align:left;width:80%">
+                        <form action="{% url 'like-post' %}" method="POST" style="display: inline-block;">
+                            {% csrf_token %}
+                            <input type="hidden" name="post_id" value="{{post.id}}">
+
+                            {% if request.user not in post.liked.all %}
+                            <button type="submit"
+                                style="background-color:rgb(25, 0, 255);color:whitesmoke;width: 58px;height: 30px;line-height: 10px;font-size: medium;border-radius: 30px;">Like
+                            </button>
+                            {% else %}
+                            <button type="submit"
+                                style="background-color:rgb(25, 0, 255);color:whitesmoke;width: 70px;height: 30px;line-height: 10px;font-size: medium;border-radius: 30px;">Unlike
+                            </button>
+                            {% endif %}
+
+                        </form>
+                        <a href="{% url "post-likes" post.id%}" style="color:rgb(25, 0, 255)" class="mx-3">
+						    <strong>{{ post.liked.all.count }} likes</strong>
+					    </a>
+                        <a href="{% url 'view' post.id%}" style="color:rgb(25, 0, 255);"><i class="fa fa-comment mx-4 fa-lg " aria-hidden="true"></i></a>
+                    </div>
+			
+		</div>
+	</div>
+
+	<hr>
+
+	{% endfor %}
+	{% elif checker.is_self == True %}
+	<h3>You have no posts.</h3>
+	<h4>Add a post now.</h4>
+
+	{% elif checker.is_friend == False %}
+	<h3>You can't view this user's post.</h3>
+	<h4>Add him as friend.</h4>
+	{% else %}
+	<h3>This user has not posted anything yet.</h3>
+	{% endif %}
+</div>
+{% endblock %}

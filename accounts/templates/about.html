@@ -1,0 +1,44 @@
+{% extends "profileLayout.html" %}
+
+{% block content %}
+<div class="profile-content">
+    {% if checker.is_self == False %}
+    <h2>Information about {{account.userprofile.last_name}} {{account.userprofile.first_name}}:</h2>
+    {% else %}
+    <h2>Information about {{user.userprofile.last_name}} {{user.userprofile.first_name}}:</h2>
+    {% endif %}
+    <br>
+
+    {% if checker.is_self == False %}
+    <h4 class="profile-about">Country:</h4>
+    {{account.userprofile.country}}
+    {% else %}
+    <h4 class="profile-about">Country:</h4>
+    {{user.userprofile.country}}
+    {% endif %}
+
+    <br>
+    <br>
+    {% if checker.is_self == False %}
+    <h4 class="profile-about">Birthdate: </h4>
+    {{account.userprofile.birthdate}}
+    {% else %}
+    <h4 class="profile-about">Birthdate: </h4>
+    {{user.userprofile.birthdate}}
+    {% endif %}
+    <br>
+
+    <br>
+    <br><br>
+    <hr>
+
+    {% if checker.is_self == False %}
+    <h4 class="profile-about">About: </h4>
+    {{account.userprofile.about}}
+    {% else %}
+    <h4 class="profile-about">About: </h4>
+    {{user.userprofile.about}}
+    {% endif %}
+
+</div>
+{% endblock %}

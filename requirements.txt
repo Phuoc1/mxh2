@@ -1,0 +1,6 @@
+django
+gunicorn
+django-heroku
+django-active-link
+django-crispy-forms
+pillow

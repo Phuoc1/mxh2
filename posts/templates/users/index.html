@@ -1,0 +1,87 @@
+{% extends "layout.html"%}
+
+{% block body %}
+<div class="container">
+    <div class="row pt-5">
+        <div class="col-sm-4 ">
+            <div class="mycard">
+                <form action="" method="GET">
+                    <input type="text" name="q" id="" class="post_input " placeholder="Search for user by name"
+                        value="{{query}}">
+                    <input type="submit" class="btn mt-2" value="Search">
+                </form>
+            </div>
+
+        </div>
+        <div class="col-sm-8" style="height:660px; overflow-y: scroll;">
+
+            <div class="mycard">
+                <i class="fa fa-users fa-4x" aria-hidden="true"></i>
+                <h1>Results: </h1>
+                {% if usersResult %}
+                {% for user in usersResult %}
+                    <hr>
+                    <!--ĐẦU PHẦN TỰ THÊM-->
+                    <div style="display: flex;justify-content: center;">
+                        {% if checker.is_self == False %}
+                        <img src="{% if user.userprofile.avatar %} {{user.userprofile.avatar.url}} {% else %} /images/avatars/profile.jpeg {% endif %}"
+                            class="img-responsive" alt="" style="width: 40px;position: absolute;left: 40px; ">
+                        {% else %}
+                        <img src="{% if user.userprofile.avatar %} {{user.userprofile.avatar.url}} {% else %} /images/avatars/profile.jpeg {% endif %}"
+                            class="img-responsive" alt="" style="width: 40px;position: absolute;left: 40px;">
+                        {% endif %}
+                    </div> 
+                    <!--//CUỐI PHẦN TỰ THÊM-->
+
+                    <h5>{{user.userprofile.last_name}} {{user.userprofile.first_name}} </h5>
+                    <h6>UserName: {{user.username}}</h6>
+
+                    <div class="d-flex justify-content-space-beween" style="width:100%">
+                        <a class="btn-secondary btn" href="/profile/{{user.id}}"><i class="fas fa-user"></i>View Profile</a>
+                        <a class="post btn" href="/messages/?id={{ user.id }}"><i class="fas fa-envelope"></i>Send Message</a>
+                        
+
+                        <div>
+                            {% if checker.is_friend == False and checker.is_self == False %}
+                                <!-- You sent them a request -->
+                                {% if checker.request_sent == 1 %}
+                                    <div class="profile-userbuttons">
+                                        <button class="post btn btn-sm" id="id_cancel_friend_request_btn"><i
+                                                class="fas fa-user-plus"></i>
+                                            Cancel Friend Request
+                                        </button>
+                                    </div>
+                                {% endif %}
+                                <!-- No requests have been sent -->
+                                {% if checker.request_sent == -1 %}
+                                <div class="profile-userbuttons">
+                                    <button class="post btn btn-sm" id="id_send_friend_request_btn"><i class="fas fa-user-plus"></i>
+                                        Send Friend Request
+                                    </button>
+                                </div>
+                                {% endif %}
+                            {% endif %}
+
+                            {% if checker.is_friend %}
+                                <div class="profile-userbuttons d-flex flex-row align-items-center m-auto px-2">
+                                    <button class="btn btn-secondary m-auto " id="id_unfriend_btn">Unfriend</button>
+                                </div>
+                            {% endif %}
+
+                        </div>        
+                        
+
+                    </div>
+                    <hr>
+                {% endfor %}
+                {% else %}
+                <h3>There is no results.. </h3>
+                <h2>Search using another name.</h2>
+                {% endif %}
+
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

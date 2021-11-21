@@ -1,0 +1,136 @@
+{% extends "layout.html"%}
+{% block body %}
+{% load static %}
+
+    
+
+<div  class="container" style="margin-top:-48px;">
+    <div class="row pt-5" >
+        <div class="col-sm-8 mycard d-flex flex-column" style="margin-top:-10px;">
+            <div class=" "> <!-- post-topbar -->
+                <h3><a href="#" ><i class="fab fa-facebook-messenger" ></i></a><span style="color:#e44d3a;"> {{ msgto}} </span></h3>
+                <hr>
+                <div class="box" >
+                    {% for message in messages %}
+                        <div class="card text-center">
+                            {% if request.user == message.sender and request.user == message.reciever %}
+                                                    <!-- bg-light -->
+                                <div class="card-body  " style="padding-bottom:4px; padding-top:4px; background-color:rgb(192, 240, 104) ; border-radius:12px; width: 500px; margin-left:201px ;">
+                                    
+                                    <h6 class="card-text" style="text-align:left; ">
+                                        Không thể gửi tin nhắn cho chính bạn !
+                                    </h6>
+                                </div>
+                            {% elif request.user == message.sender %}
+                                                    <!-- bg-light -->
+                                <div class="card-body  " style="padding-bottom:4px; padding-top:4px; background-color:rgb(192, 240, 104) ; border-radius:12px; width: 500px; margin-left:201px ;">
+                                    <p style="text-align:right;color:gray;font-size:12px;margin:0px; ">
+                                        {% if message.read == True %}
+                                            <strong style="color:blue; font-size: 15x"><i class="fa fa-eye" aria-hidden="true"></i>  Seen . </strong>
+                                        {% elif message.read != True %}
+                                            <strong style="color:red; font-size: 12px"><i class="fas fa-envelope"></i>  Sent . </strong>
+                                        {% endif %}
+                                            {{message.created_at}}
+                                        <span style="color:#e44d3a; font-size: 17px"> 
+                                            {{ message.sender.userprofile.last_name}} {{ message.sender.userprofile.first_name}}
+                                            <img class="m-1 rounded-circle" style="width:30px;height:30px;" src="{% if message.sender.userprofile.avatar %}{{message.sender.userprofile.avatar.url}} {% else %} {% static 'images/avatars/profile.jpeg' %} {% endif %}">
+                                        </span>
+                                    </p>
+                                    <h6 class="card-text" style="text-align:left; ">
+                                        {{ message.text}}
+                                    </h6>
+                                </div>
+                            {% elif request.user == message.reciever %}  <!--rgb(219, 165, 221)-->
+                                <div class="card-body" style="padding-bottom:4px; padding-top:0px; background-color: rgba(0, 231, 193, 0.897); border-radius:12px; width: 500px;">
+                                    <h6 class="card-text" style="text-align:left;">
+                                        <span style="color:#e44d3a;">
+                                            <img class="m-1 rounded-circle" style="width: 35px;height:35px;" src="{% if message.sender.userprofile.avatar %}{{message.sender.userprofile.avatar.url}} {% else %} {% static 'images/avatars/profile.jpeg' %} {% endif %}">
+                                            {{ message.sender.userprofile.last_name}} {{ message.sender.userprofile.first_name}}
+                                            <span style="text-align:left;color:gray;font-size:12px;margin:0px">{{ message.created_at}}
+                                                <strong style="color:red; font-size: 12px"><i class="fas fa-envelope"></i></strong>
+                                            </span>
+                                             
+                                        </span><br>
+                                            {{ message.text}}
+                                    </h6>
+                                </div>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="card p-2">
+
+                <form action="" method="post">
+                    {% csrf_token %}
+                    <div class="row d-flex justify-content-space-beween">
+                        <div class="col-10">
+                            {{ form.as_p}}
+                            <input style="margin-top: 7px;" class="post_input " name="text"
+                                placeholder="  Enter your message" />
+
+                        </div>
+                        <div class="col-2">
+                            <button class="post btn" style="margin-bottom: 5px;margin-top:7px; background-color:rgb(25, 0, 255)"
+                                type="submit">Send
+                            </button>
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+
+        <!---------------------------------------------------- side ------------------------------------------------------------>
+        <div class="col-sm-4 ">
+
+            <div class="mycard">
+                <form action="" method="GET">
+                    <input type="text" name="q" id="" class="post_input " placeholder=" Search for user by name">
+                    <input type="submit" class="btn mt-2" value="Search"></a>
+                </form>
+            </div>
+
+            <div class="mycard" style="height:540px;overflow-y:scroll">
+                <h2>Chats</h2>
+                {% for friend in newfriends %}
+                <hr>
+                
+                {% if msgto == friend.friendObj.username %}
+                <a href="?id={{ friend.friendObj.id }}" style="color:black;">
+                    <div class="d-flex justify-content-center align-items-center" style="background-color:#f88b7c;"
+                        id="chatdiv">
+                {% else %}
+                    <a href="?id={{ friend.friendObj.id }}" style="color:black;">
+                        <div class="d-flex justify-content-center align-items-center" id="chatdiv">
+                {% endif %}
+                                 {% if friend.friendCounter != null and friend.friendCounter != 0 %}
+                                <p class="rounded-circle d-inline px-2 py-1" style="background-color:white;color:red;font-weight:bold;-webkit-text-stroke: 1px red;">
+                                    {{friend.friendCounter}}</p>
+                                    
+                                {% endif %}
+                                
+                                <img class="  m-1 rounded-circle " style="width:60px; height:60px;"
+                                    src="{% if friend.friendObj.userprofile.avatar %}{{friend.friendObj.userprofile.avatar.url}} {% else %} {% static 'images/avatars/profile.jpeg' %} {% endif %}">
+                                <div class="mx-2 ">{{friend.friendObj.userprofile.last_name}} {{friend.friendObj.userprofile.first_name}}</div>
+                            
+                            </div>
+                        </a>
+
+                        <hr>
+                        {% endfor %}
+
+
+
+
+                    </div>
+
+
+            </div>
+
+
+
+
+        </div>
+
+        {%endblock%}
