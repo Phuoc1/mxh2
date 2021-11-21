@@ -5,5 +5,5 @@ django-active-link
 django-crispy-forms
 django-guard-livereload
 django-rack-livereload
-
+django-livereload-server
 pillow
