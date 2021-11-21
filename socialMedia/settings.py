@@ -86,22 +86,22 @@ TEMPLATES = [
 WSGI_APPLICATION = 'socialMedia.wsgi.application'
 
 
-# Database
-# https://docs.djangoproject.com/en/1.11/ref/settings/#databases
+#postgres://btrtyuulpdbwuq:587c980fffe54ca67f9c1aaf24cb07ca33f0aac86924742cc1c4431bb2bdda55@ec2-34-196-238-94.compute-1.amazonaws.com:5432/d479jhcc9pdd6q
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': "socialmedia",
-        "USER": "root",
-        "PASSWORD": "",
-        "HOST": "localhost"
+        'NAME': 'detq9so7h3su3f',
+        'USER': 'fcxynhfcvqadct',
+        'PASSWORD': 'e235369c60f829629fde23cade08feef9da5b3b78cecf40e32fcaa850e4bc39c',
+        'HOST': 'ec2-18-214-214-252.compute-1.amazonaws.com',
+        'PORT': 5432,
+        'OPTIONS':{
+            'init_command':"SET sql_mode='STRICT_TRANS_TABLES'",
+        }
     }
 }
-
-
-# Password validation
-# https://docs.djangoproject.com/en/1.11/ref/settings/#auth-password-validators
+#postgres://fcxynhfcvqadct:e235369c60f829629fde23cade08feef9da5b3b78cecf40e32fcaa850e4bc39c@ec2-18-214-214-252.compute-1.amazonaws.com:5432/detq9so7h3su3f
 
 AUTH_PASSWORD_VALIDATORS = [
     {
