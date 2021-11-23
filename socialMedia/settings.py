@@ -65,7 +65,7 @@ MIDDLEWARE = [
 
 ]
 
-ROOT_URLCONF = 'socialMedia.urls'
+ROOT_URLCONF = 'mxh2.urls'
 
 TEMPLATES = [
     {
@@ -83,7 +83,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'socialMedia.wsgi.application'
+WSGI_APPLICATION = 'mxh2.wsgi.application'
 
 
 #postgres://btrtyuulpdbwuq:587c980fffe54ca67f9c1aaf24cb07ca33f0aac86924742cc1c4431bb2bdda55@ec2-34-196-238-94.compute-1.amazonaws.com:5432/d479jhcc9pdd6q
